@@ -1,0 +1,154 @@
+[
+   {
+      "pk":"FR",
+      "model":"places.country",
+      "fields":{
+         "en_name":"France",
+         "capitalCode":""
+      }
+   },
+   {
+      "pk":"US",
+      "model":"places.country",
+      "fields":{
+         "en_name":"United States",
+         "capitalCode":""
+      }
+   },
+
+
+    {
+        "pk":"2990440",
+        "model":"places.geoname",
+        "fields":{
+            "geonameId":2990440,
+            "timezone":"Europe/Paris",
+            "lat":43.658411,
+            "lng":7.215872,
+            "englishName":"Nice"
+        }
+    },
+   {
+      "pk":"NCE",
+      "model":"places.city",
+      "fields":{
+         "englishName":"Nice",
+         "stateCode":"",
+         "country":"FR",
+         "geoname":2990440,
+         "timezone":"Europe/Paris",
+         "gmt_offset":"1",
+         "dst_offset":"1",
+         "raw_offset":"1",
+         "lat":43.658411,
+         "lng":7.215872
+      }
+   },
+
+
+    {
+        "pk":"2988507",
+        "model":"places.geoname",
+        "fields":{
+            "geonameId":2988507,
+            "timezone":"Europe/Paris",
+            "lat":43.658411,
+            "lng":7.215872,
+            "englishName":"Paris"
+        }
+    },
+   {
+      "pk":"PAR",
+      "model":"places.city",
+      "fields":{
+         "englishName":"Paris",
+         "stateCode":"",
+         "cityCode":"PAR",
+         "country":"FR",
+         "geoname":2988507,
+         "timezone":"Europe/Paris",
+         "gmt_offset":"1",
+         "dst_offset":"1",
+         "raw_offset":"1",
+         "population":10000000,
+         "lat":43.658411,
+         "lng":7.215872
+      }
+   },
+
+    {
+        "pk":"987654",
+        "model":"places.geoname",
+        "fields":{
+            "geonameId":987654,
+            "timezone":"America/US",
+            "lat":43.658411,
+            "lng":7.215872,
+            "englishName":"Paris"
+        }
+    },
+   {
+      "pk":"PTX",
+      "model":"places.city",
+      "fields":{
+         "englishName":"Paris",
+         "stateCode":"TX",
+         "cityCode": "PTX",
+         "country":"US",
+         "geoname":987654,
+         "population":1000,
+         "timezone":"USA",
+         "gmt_offset":"1",
+         "dst_offset":"1",
+         "raw_offset":"1",
+         "lat":43.658411,
+         "lng":7.215872
+      }
+   },
+
+    {
+        "pk":"123456789",
+        "model":"places.geoname",
+        "fields":{
+            "geonameId":123456789,
+            "timezone":"Europe/Paris",
+            "lat":43.658411,
+            "lng":7.215872,
+            "englishName":"Paris"
+        }
+    },
+   {
+      "pk":"NCO",
+      "model":"places.city",
+      "fields":{
+         "englishName":"Nico",
+         "stateCode":"",
+         "country":"FR",
+         "geoname":123456789,
+         "timezone":"Europe/Paris",
+         "gmt_offset":"1",
+         "dst_offset":"1",
+         "raw_offset":"1",
+         "lat":43.658411,
+         "lng":7.215872
+      }
+   },
+
+
+   {
+      "pk":"NCE",
+      "model":"places.airport",
+      "fields":{
+         "cityCode":"NCE",
+         "country":"FR",
+         "geonameId":6299418,
+         "stateCode":"",
+         "lat":43.658411,
+         "englishName":"Nice C\u00f4te d'Azur International Airport",
+         "lng":7.215872,
+         "page_rank": 1,
+         "is_airport": true,
+         "icao_code": "LFMN"
+      }
+   }
+]

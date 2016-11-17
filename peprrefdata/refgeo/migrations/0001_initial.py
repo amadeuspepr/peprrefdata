@@ -18,6 +18,7 @@ class Migration(migrations.Migration):
                 ('location_type', models.CharField(max_length=4, null=True, blank=True)),
                 ('is_airport', models.BooleanField(default=False)),
                 ('all_airports', models.BooleanField(default=False)),
+                ('name', models.TextField(default=b'')),
                 ('alternateNames', models.CharField(default=b'', max_length=10000)),
                 ('timezone', models.TextField(null=True)),
                 ('stateCode', models.CharField(max_length=6, db_index=True)),
@@ -25,6 +26,7 @@ class Migration(migrations.Migration):
                 ('cityName', models.TextField()),
                 ('lat', models.FloatField()),
                 ('lng', models.FloatField()),
+                ('koppen', models.CharField(max_length=3, null=True, blank=True)),
                 ('page_rank', models.FloatField(default=0, max_length=10)),
             ],
             options={
@@ -36,6 +38,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('cityCode', models.CharField(max_length=3, serialize=False, primary_key=True)),
                 ('stateCode', models.CharField(max_length=6, db_index=True)),
+                ('name', models.TextField(default=b'')),
                 ('alternateNames', models.CharField(default=b'', max_length=10000)),
                 ('timezone', models.TextField(null=True)),
                 ('gmt_offset', models.FloatField(null=True)),
@@ -58,7 +61,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('code', models.CharField(max_length=2, serialize=False, primary_key=True)),
                 ('geonameId', models.IntegerField(default=0, max_length=10, db_index=True)),
-                ('en_name', models.TextField()),
+                ('name', models.TextField()),
             ],
             options={
             },
@@ -69,10 +72,10 @@ class Migration(migrations.Migration):
             fields=[
                 ('code', models.CharField(max_length=2, serialize=False, primary_key=True)),
                 ('code3', models.CharField(default=None, max_length=3, null=True)),
+                ('name', models.TextField(default=b'')),
                 ('alternateNames', models.TextField(default=b'')),
                 ('capitalCode', models.CharField(max_length=3)),
-                ('currency', models.CharField(default=None, max_length=3, null=True)),
-                ('geonameId', models.IntegerField(default=0, max_length=10, db_index=True)),
+                ('geonameId', models.IntegerField(default=None, max_length=10, null=True, db_index=True)),
                 ('population', models.IntegerField(default=0, max_length=9)),
                 ('continentCode', models.CharField(default=b'', max_length=2)),
             ],
@@ -97,6 +100,7 @@ class Migration(migrations.Migration):
             name='Geoname',
             fields=[
                 ('geonameId', models.IntegerField(max_length=11, serialize=False, primary_key=True)),
+                ('name', models.TextField(default=b'')),
                 ('alternateNames', models.TextField(default=b'')),
                 ('fcode', models.CharField(max_length=6)),
                 ('stateCode', models.CharField(max_length=6, null=True, db_index=True)),
@@ -125,6 +129,12 @@ class Migration(migrations.Migration):
         migrations.AlterUniqueTogether(
             name='state',
             unique_together=set([('country', 'stateCode')]),
+        ),
+        migrations.AddField(
+            model_name='country',
+            name='currency',
+            field=models.ForeignKey(default=None, to='refgeo.Currency', null=True),
+            preserve_default=True,
         ),
         migrations.AddField(
             model_name='city',

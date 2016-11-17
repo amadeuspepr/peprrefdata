@@ -1,59 +1,8 @@
+from peprrefdata import get_or_none, get_or_default
 from django.db import models
 import logging
 lg = logging.getLogger(__name__)
 
-
-def get_or_none(model, **kwargs):
-    try:
-        return model.objects.get(**kwargs)
-    except model.DoesNotExist:
-        return None
-
-def get_or_default(model, defaultvalue, **kwargs):
-    try:
-        return model.objects.get(**kwargs)
-    except model.DoesNotExist:
-        return defaultvalue
-
-class Continent(models.Model):
-    code = models.CharField(max_length=2, primary_key=True)
-    geonameId = models.IntegerField(max_length=10, db_index=True, default=0)
-    en_name = models.TextField()
-
-class Country(models.Model):
-    code = models.CharField(max_length=2, primary_key=True)
-    code3 = models.CharField(max_length=3, null=True, default=None)
-    name = models.TextField()
-    alternateNames = models.TextField(default='')
-    capitalCode = models.CharField(max_length=3)
-    currency = models.CharField(max_length=3, null=True, default=None)
-    geonameId = models.IntegerField(max_length=10,db_index=True,default=0)
-    population = models.IntegerField(max_length=9, default=0)
-    continentCode = models.CharField(max_length=2, default="")
-
-    def getuid(self):
-        return 'c/%s'%(self.code)
-
-    @property
-    def name(self):
-        return self.en_name
-
-    @name.setter
-    def name(self, value):
-        self.en_name = value
-
-
-class State(models.Model):
-    country = models.ForeignKey(Country, null=True, blank=True)
-    stateCode = models.CharField(max_length=6) # some strange states have 6 letters !
-    name = models.TextField()
-
-    class Meta:
-        unique_together = ("country", "stateCode")
-
-    @property
-    def countryCode(self):
-        return self.country_id
 
 class Currency(models.Model):
     code = models.CharField(max_length=3, primary_key=True)
@@ -77,9 +26,39 @@ class Currency(models.Model):
                 Rate$ other: %s' % (str(self.one_dollar), str(other.one_dollar) ))
 
 
+class Continent(models.Model):
+    code = models.CharField(max_length=2, primary_key=True)
+    geonameId = models.IntegerField(max_length=10, db_index=True, default=0)
+    name = models.TextField()
+
+class Country(models.Model):
+    code = models.CharField(max_length=2, primary_key=True)
+    code3 = models.CharField(max_length=3, null=True, default=None)
+    name = models.TextField(default='')
+    alternateNames = models.TextField(default='')
+    capitalCode = models.CharField(max_length=3)
+    currency = models.ForeignKey(Currency, null=True, default=None)
+    geonameId = models.IntegerField(max_length=10, db_index=True, default=None, null=True)
+    population = models.IntegerField(max_length=9, default=0)
+    continentCode = models.CharField(max_length=2, default="")
+
+class State(models.Model):
+    country = models.ForeignKey(Country, null=True, blank=True)
+    stateCode = models.CharField(max_length=6) # some strange states have 6 letters !
+    name = models.TextField()
+
+    class Meta:
+        unique_together = ("country", "stateCode")
+
+    @property
+    def countryCode(self):
+        return self.country_id
+
+
+
 class Geoname(models.Model):
     geonameId = models.IntegerField(max_length=11, primary_key=True)
-    name = models.TextField()
+    name = models.TextField(default='')
     alternateNames = models.TextField(default='')
     fcode = models.CharField(max_length=6)
     country = models.ForeignKey(Country, null=True, blank=True)
@@ -90,15 +69,7 @@ class Geoname(models.Model):
     population = models.IntegerField(max_length=9, default=0)
 
     def __str__(self):
-        return "%d\t%s" % (self.geonameId, self.englishName)
-
-    @property
-    def name(self):
-        return self.englishName
-
-    @name.setter
-    def name(self, value):
-        self.englishName = value
+        return "%d\t%s" % (self.geonameId, self.name)
 
     def getuid(self):
         return 'g/%d' % (self.geonameId)
@@ -112,7 +83,7 @@ class City(models.Model):
     geoname = models.ForeignKey(Geoname, null=True, blank=True)
     stateCode = models.CharField(max_length=6, db_index=True) # some strange states have 6 letters !
     country = models.ForeignKey(Country, null=True, blank=True)
-    name = models.TextField()
+    name = models.TextField(default='')
     alternateNames = models.CharField(max_length=10000, default='')
     timezone = models.TextField(null=True)
     gmt_offset = models.FloatField(null=True)
@@ -127,11 +98,7 @@ class City(models.Model):
     page_rank = models.FloatField(max_length=10, default=0)
 
     def __str__(self):
-        return "%s\t%d\t%s" % (self.cityCode, self.geonameId, self.englishName)
-
-    @property
-    def name(self):
-        return self.englishName
+        return "%s\t%d\t%s" % (self.cityCode, self.geonameId, self.name)
 
     @property
     def countryCode(self):
@@ -156,7 +123,7 @@ class Airport(models.Model):
     is_airport = models.BooleanField(default=False) # is really an airport ? or an "all airport" ?
     all_airports = models.BooleanField(default=False) # is really an airport ? or an "all airport" ?
     geoname = models.ForeignKey(Geoname, null=True, blank=True)
-    name = models.TextField()
+    name = models.TextField(default='')
     alternateNames = models.CharField(max_length=10000, default='')
     timezone = models.TextField(null=True)
     stateCode = models.CharField(max_length=6, db_index=True) # some strange states have 6 letters !
@@ -165,14 +132,11 @@ class Airport(models.Model):
     cityName = models.TextField()
     lat = models.FloatField()
     lng = models.FloatField()
+    koppen = models.CharField(max_length=3, null=True, blank=True)
     page_rank = models.FloatField(max_length=10, default=0)
 
     def __str__(self):
-        return "%s\t%d\t%s" % (self.iataCode, self.geonameId, self.englishName)
-
-    @property
-    def name(self):
-        return self.englishName
+        return "%s\t%d\t%s" % (self.iataCode, self.geonameId, self.name)
 
     def getuid(self):
         return 'g/%d' % (self.geonameId)
